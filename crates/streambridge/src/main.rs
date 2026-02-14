@@ -14,12 +14,28 @@ use tracing::{error, info};
 #[derive(Parser)]
 #[command(
     name = "streambridge",
-    about = "Bridge NDI streams to MJPEG over WebSocket",
-    after_help = "NDI\u{00ae} is a registered trademark of Vizrt Group."
+    about = "Bridge NDI\u{00ae} streams to MJPEG over HTTP",
+    after_help = "NDI\u{00ae} is a registered trademark of Vizrt NDI AB.\nhttps://ndi.video"
 )]
 struct Cli {
     #[command(subcommand)]
-    command: Commands,
+    command: Option<Commands>,
+
+    /// HTTP/WS listen port
+    #[arg(long, default_value_t = 9550, global = true)]
+    port: u16,
+
+    /// Max frames per second
+    #[arg(long, default_value_t = 25, global = true)]
+    max_fps: u32,
+
+    /// TurboJPEG quality (1-100)
+    #[arg(long, default_value_t = 75, global = true)]
+    jpeg_quality: i32,
+
+    /// Stats log interval in seconds
+    #[arg(long, default_value_t = 20, global = true)]
+    log_interval: u64,
 }
 
 #[derive(Subcommand)]
@@ -27,23 +43,18 @@ enum Commands {
     /// Discover and list available NDI sources on the network
     List,
     /// Start MJPEG server — streams are created on-demand
-    Serve {
-        /// HTTP/WS listen port
-        #[arg(long, default_value_t = 9550)]
-        port: u16,
+    Serve,
+}
 
-        /// Max frames per second
-        #[arg(long, default_value_t = 25)]
-        max_fps: u32,
-
-        /// TurboJPEG quality (1-100)
-        #[arg(long, default_value_t = 75)]
-        jpeg_quality: i32,
-
-        /// Stats log interval in seconds
-        #[arg(long, default_value_t = 20)]
-        log_interval: u64,
-    },
+fn print_banner(port: u16) {
+    eprintln!();
+    eprintln!("  StreamBridge v{}", env!("CARGO_PKG_VERSION"));
+    eprintln!("  Powered by NDI\u{00ae} \u{2014} https://ndi.video");
+    eprintln!("  NDI\u{00ae} is a registered trademark of Vizrt NDI AB.");
+    eprintln!();
+    eprintln!("  Server: http://localhost:{}", port);
+    eprintln!("  Close this window to stop.");
+    eprintln!();
 }
 
 fn main() {
@@ -51,13 +62,10 @@ fn main() {
     let cli = Cli::parse();
 
     match cli.command {
-        Commands::List => cmd_list(),
-        Commands::Serve {
-            port,
-            max_fps,
-            jpeg_quality,
-            log_interval,
-        } => cmd_serve(port, max_fps, jpeg_quality, log_interval),
+        Some(Commands::List) => cmd_list(),
+        Some(Commands::Serve) | None => {
+            cmd_serve(cli.port, cli.max_fps, cli.jpeg_quality, cli.log_interval)
+        }
     }
 }
 
@@ -97,6 +105,8 @@ fn cmd_list() {
 }
 
 fn cmd_serve(port: u16, max_fps: u32, jpeg_quality: i32, log_interval: u64) {
+    print_banner(port);
+
     let ndi = match ndi_sdk::load() {
         Ok(n) => n,
         Err(ndi_sdk::NdiError::DllNotFound(_)) => {
