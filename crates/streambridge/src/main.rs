@@ -136,13 +136,18 @@ fn cmd_serve(port: u16, max_fps: u32, jpeg_quality: i32, log_interval: u64) {
     rt.block_on(async {
         // Stats logging task
         if log_interval > 0 {
-            let _manager = receiver_manager.clone();
+            let manager = receiver_manager.clone();
+            let interval_secs = log_interval as f64;
             tokio::spawn(async move {
-                let mut interval = tokio::time::interval(Duration::from_secs(log_interval));
+                let mut tick = tokio::time::interval(Duration::from_secs(log_interval));
                 loop {
-                    interval.tick().await;
-                    // Stats are logged per-source from the receiver manager
-                    // For now, a placeholder that could iterate active receivers
+                    tick.tick().await;
+                    for (name, stats) in manager.active_stats() {
+                        let snap = stats.snapshot_and_reset(interval_secs);
+                        if snap.clients > 0 || snap.fps_out > 0.0 {
+                            info!("[{}] {}", name, snap);
+                        }
+                    }
                 }
             });
         }

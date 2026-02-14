@@ -197,6 +197,15 @@ impl ReceiverManager {
         Ok(shared)
     }
 
+    /// Returns (source_name, stats) for all active receivers.
+    pub fn active_stats(&self) -> Vec<(String, Arc<crate::stats::SourceStats>)> {
+        let receivers = self.receivers.lock().unwrap();
+        receivers
+            .iter()
+            .map(|(name, r)| (name.clone(), r.stats.clone()))
+            .collect()
+    }
+
     /// Remove a receiver if it has no more clients.
     pub fn maybe_remove(&self, source_name: &str) {
         let mut receivers = self.receivers.lock().unwrap();
