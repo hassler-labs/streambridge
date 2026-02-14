@@ -1,0 +1,3 @@
+[workspace]
+members = ["crates/ndi-sdk", "crates/streambridge"]
+resolver = "2"
