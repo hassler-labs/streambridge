@@ -48,6 +48,7 @@ impl EncodeBuffers {
 }
 
 /// Convert UYVY packed 4:2:2 to planar YUV 4:2:0 (averaging chroma vertically).
+/// Processes two rows at a time to avoid per-pixel branching on row parity.
 pub fn uyvy_to_yuv420_planar(
     uyvy: &[u8],
     stride: usize,
@@ -57,23 +58,27 @@ pub fn uyvy_to_yuv420_planar(
     u: &mut [u8],
     v: &mut [u8],
 ) {
-    for row in 0..h {
-        let src = &uyvy[row * stride..];
-        let y_off = row * w;
-        for col in (0..w).step_by(2) {
-            let i = col * 2;
-            y[y_off + col] = src[i + 1];
-            y[y_off + col + 1] = src[i + 3];
+    let half_w = w / 2;
+    // Process pairs of rows (even + odd)
+    for row_pair in 0..h / 2 {
+        let even_row = row_pair * 2;
+        let odd_row = even_row + 1;
+        let src_even = &uyvy[even_row * stride..];
+        let src_odd = &uyvy[odd_row * stride..];
+        let y_off_even = even_row * w;
+        let y_off_odd = odd_row * w;
+        let uv_off = row_pair * half_w;
 
-            let uv_row = row / 2;
-            let uv_off = uv_row * (w / 2) + col / 2;
-            if row % 2 == 0 {
-                u[uv_off] = src[i];
-                v[uv_off] = src[i + 2];
-            } else {
-                u[uv_off] = ((u[uv_off] as u16 + src[i] as u16) / 2) as u8;
-                v[uv_off] = ((v[uv_off] as u16 + src[i + 2] as u16) / 2) as u8;
-            }
+        for col in 0..half_w {
+            let i = col * 4;
+            // Extract luma from both rows
+            y[y_off_even + col * 2] = src_even[i + 1];
+            y[y_off_even + col * 2 + 1] = src_even[i + 3];
+            y[y_off_odd + col * 2] = src_odd[i + 1];
+            y[y_off_odd + col * 2 + 1] = src_odd[i + 3];
+            // Average chroma from even and odd rows
+            u[uv_off + col] = ((src_even[i] as u16 + src_odd[i] as u16) / 2) as u8;
+            v[uv_off + col] = ((src_even[i + 2] as u16 + src_odd[i + 2] as u16) / 2) as u8;
         }
     }
 }

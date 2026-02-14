@@ -92,7 +92,7 @@ async fn handle_ws(mut socket: WebSocket, source_name: String, state: AppState) 
         match rx.recv().await {
             Ok(JpegFrame { data }) => {
                 if socket
-                    .send(Message::Binary(data.as_ref().clone().into()))
+                    .send(Message::Binary(data.into()))
                     .await
                     .is_err()
                 {

@@ -1,3 +1,4 @@
+use bytes::Bytes;
 use crate::encode::{self, EncodeBuffers};
 use crate::stats::SourceStats;
 use ndi_sdk::{self, FourCCVideoType, FrameType, NdiInstance, RecvBandwidth, RecvColorFormat, Source};
@@ -11,7 +12,7 @@ use tracing::{debug, error, info, warn};
 /// A JPEG frame ready to send over WebSocket.
 #[derive(Clone)]
 pub struct JpegFrame {
-    pub data: Arc<Vec<u8>>,
+    pub data: Bytes,
 }
 
 /// A shared receiver for a single NDI source. Broadcasts JPEG frames to subscribers.
@@ -160,7 +161,7 @@ impl ReceiverManager {
                                         last_send = Instant::now();
 
                                         let _ = tx.send(JpegFrame {
-                                            data: Arc::new(jpeg),
+                                            data: Bytes::from(jpeg),
                                         });
                                     }
                                     Err(e) => {

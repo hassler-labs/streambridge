@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 ndi-sdk = { path = "../ndi-sdk" }
+bytes = "1"
 clap = { version = "4", features = ["derive"] }
 tokio = { version = "1", features = ["full"] }
 axum = { version = "0.8", features = ["ws"] }
