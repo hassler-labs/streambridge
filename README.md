@@ -19,12 +19,20 @@ StreamBridge picks up NDI sources on your network and streams them to any browse
 - Audio — video only for now
 - Large-scale routing — this is a simple bridge, not a router
 
+## Keep in mind
+
+Every source you watch gets decoded and re-encoded to JPEG on the server. That takes CPU and pushes pixels over your network. A couple of previews on a modern machine? No problem. Dozens of 4K sources on a laptop over Wi-Fi? You'll feel it.
+
 ## Requirements
 
 - [NDI 6 Runtime](https://ndi.video/tools/) on the machine running StreamBridge
 - Currently tested on Windows
 
 The built-in page at `http://localhost:9550` has live preview, API docs, and a code example.
+
+## Disclaimer
+
+This software is provided as-is with no warranty of any kind. Use it at your own risk. The authors take no responsibility for anything that happens as a result of using this tool.
 
 ---
 
