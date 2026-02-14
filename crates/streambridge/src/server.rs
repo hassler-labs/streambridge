@@ -24,7 +24,7 @@ pub fn create_router(state: AppState) -> Router {
     Router::new()
         .route("/sources", get(get_sources))
         .route("/ws", get(ws_handler))
-        .route("/test", get(test_page))
+        .route("/", get(test_page))
         .layer(cors)
         .with_state(state)
 }
