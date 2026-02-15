@@ -1,4 +1,4 @@
-use ndi_sdk::FourCCVideoType;
+use crate::ndi::FourCCVideoType;
 
 /// Reusable encoding buffers to avoid per-frame allocation.
 pub struct EncodeBuffers {

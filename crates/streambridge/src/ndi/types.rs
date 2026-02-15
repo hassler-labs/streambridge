@@ -1,4 +1,4 @@
-use crate::ffi;
+use super::ffi;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum FourCCVideoType {

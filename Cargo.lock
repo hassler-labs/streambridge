@@ -530,14 +530,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ndi-sdk"
-version = "0.1.0"
-dependencies = [
- "libloading",
- "thiserror 2.0.18",
-]
-
-[[package]]
 name = "nu-ansi-term"
 version = "0.50.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -836,9 +828,10 @@ dependencies = [
  "axum",
  "bytes",
  "clap",
- "ndi-sdk",
+ "libloading",
  "serde",
  "serde_json",
+ "thiserror 2.0.18",
  "tokio",
  "tower-http",
  "tracing",

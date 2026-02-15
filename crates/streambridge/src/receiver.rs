@@ -1,7 +1,7 @@
 use bytes::Bytes;
 use crate::encode::{self, EncodeBuffers};
 use crate::stats::SourceStats;
-use ndi_sdk::{self, FourCCVideoType, FrameType, NdiInstance, RecvBandwidth, RecvColorFormat, Source};
+use crate::ndi::{FourCCVideoType, FrameType, NdiInstance, RecvBandwidth, RecvColorFormat, Source};
 use std::collections::HashMap;
 use std::sync::atomic::Ordering;
 use std::sync::{Arc, Mutex};
@@ -105,7 +105,7 @@ impl ReceiverManager {
             .spawn(move || {
                 info!("capture thread started for \"{}\"", source_name_thread);
                 let mut buffers = EncodeBuffers::new();
-                let mut video_frame = ndi_sdk::ffi::NDIlib_video_frame_v2_t::default();
+                let mut video_frame = crate::ndi::ffi::NDIlib_video_frame_v2_t::default();
                 let min_frame_interval_ms = if max_fps > 0 { 1000 / max_fps as u64 } else { 0 };
                 let mut last_send = Instant::now();
 

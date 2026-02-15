@@ -1,4 +1,4 @@
-use ndi_sdk::{FindInstance, Source};
+use crate::ndi::{FindInstance, Source};
 use std::sync::{Arc, RwLock};
 use std::thread;
 use tracing::{debug, info};

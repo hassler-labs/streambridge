@@ -1,5 +1,6 @@
 mod discovery;
 mod encode;
+mod ndi;
 mod receiver;
 mod server;
 mod stats;
@@ -70,9 +71,9 @@ fn main() {
 }
 
 fn cmd_list() {
-    let ndi = match ndi_sdk::load() {
+    let ndi = match crate::ndi::load() {
         Ok(n) => n,
-        Err(ndi_sdk::NdiError::DllNotFound(_)) => {
+        Err(crate::ndi::NdiError::DllNotFound(_)) => {
             eprintln!("Error: NDI runtime not found.\n");
             eprintln!("Download and install it from: https://ndi.video/tools/");
             std::process::exit(1);
@@ -107,9 +108,9 @@ fn cmd_list() {
 fn cmd_serve(port: u16, max_fps: u32, jpeg_quality: i32, log_interval: u64) {
     print_banner(port);
 
-    let ndi = match ndi_sdk::load() {
+    let ndi = match crate::ndi::load() {
         Ok(n) => n,
-        Err(ndi_sdk::NdiError::DllNotFound(_)) => {
+        Err(crate::ndi::NdiError::DllNotFound(_)) => {
             eprintln!("Error: NDI runtime not found.\n");
             eprintln!("Download and install it from: https://ndi.video/tools/");
             std::process::exit(1);
