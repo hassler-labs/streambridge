@@ -16,7 +16,7 @@ use tracing::{error, info};
 #[command(
     name = "streambridge",
     about = "Bridge NDI\u{00ae} streams to MJPEG over HTTP",
-    after_help = "NDI\u{00ae} is a registered trademark of Vizrt NDI AB.\nhttps://ndi.video"
+    after_help = "NDI is a registered trademark of the Vizrt Group.\nhttps://ndi.video"
 )]
 struct Cli {
     #[command(subcommand)]
@@ -41,7 +41,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Discover and list available NDI sources on the network
+    /// Discover and list available NDI\u{00ae} sources on the network
     List,
     /// Start MJPEG server — streams are created on-demand
     Serve,
@@ -51,7 +51,7 @@ fn print_banner(port: u16) {
     eprintln!();
     eprintln!("  StreamBridge v{}", env!("CARGO_PKG_VERSION"));
     eprintln!("  Powered by NDI\u{00ae} \u{2014} https://ndi.video");
-    eprintln!("  NDI\u{00ae} is a registered trademark of Vizrt NDI AB.");
+    eprintln!("  NDI is a registered trademark of the Vizrt Group.");
     eprintln!();
     eprintln!("  Server: http://localhost:{}", port);
     eprintln!("  Close this window to stop.");
@@ -74,7 +74,7 @@ fn cmd_list() {
     let ndi = match crate::ndi::load() {
         Ok(n) => n,
         Err(crate::ndi::NdiError::DllNotFound(_)) => {
-            eprintln!("Error: NDI runtime not found.\n");
+            eprintln!("Error: NDI\u{00ae} runtime not found.\n");
             eprintln!("Download and install it from: https://ndi.video/tools/");
             std::process::exit(1);
         }
@@ -87,12 +87,12 @@ fn cmd_list() {
     info!("NDI version: {}", ndi.version());
     let finder = ndi.create_find_instance().expect("failed to create finder");
 
-    println!("Searching for NDI sources...");
+    println!("Searching for NDI\u{00ae} sources...");
     finder.wait_for_sources(5000);
     let sources = finder.get_current_sources();
 
     if sources.is_empty() {
-        println!("No NDI sources found.");
+        println!("No NDI\u{00ae} sources found.");
     } else {
         println!("Found {} source(s):", sources.len());
         for s in &sources {
@@ -111,7 +111,7 @@ fn cmd_serve(port: u16, max_fps: u32, jpeg_quality: i32, log_interval: u64) {
     let ndi = match crate::ndi::load() {
         Ok(n) => n,
         Err(crate::ndi::NdiError::DllNotFound(_)) => {
-            eprintln!("Error: NDI runtime not found.\n");
+            eprintln!("Error: NDI\u{00ae} runtime not found.\n");
             eprintln!("Download and install it from: https://ndi.video/tools/");
             std::process::exit(1);
         }

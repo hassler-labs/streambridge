@@ -148,7 +148,7 @@ refreshSources();
 <div class="info">
   <h2>API Reference</h2>
   <ul>
-    <li><code>GET /sources</code> &mdash; returns a JSON array of NDI source names currently visible on the network.</li>
+    <li><code>GET /sources</code> &mdash; returns a JSON array of NDI<sup>&reg;</sup> source names currently visible on the network.</li>
     <li><code>WebSocket /ws?source=&lt;name&gt;</code> &mdash; streams binary JPEG frames for the given source. Each WebSocket message is one complete JPEG image.</li>
   </ul>
 
@@ -166,7 +166,7 @@ ws.onmessage = (e) => {
 };</code></pre>
 
   <div class="ndi-attr">
-    Powered by NDI&reg; &mdash; NDI&reg; is a registered trademark of Vizrt NDI AB.
+    Powered by NDI<sup>&reg;</sup> &mdash; NDI is a registered trademark of the Vizrt Group.
   </div>
 </div>
 </body>
