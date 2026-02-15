@@ -21,7 +21,7 @@ StreamBridge picks up NDI® sources on your network and streams them to any brow
 
 ## Keep in mind
 
-Every source you watch gets decoded and re-encoded to JPEG on the server. That takes CPU and pushes pixels over your network. A couple of previews on a modern machine? No problem. Dozens of 4K sources on a laptop over Wi-Fi? You'll feel it.
+Each source you watch pulls a full NDI® stream to the server and re-encodes it as JPEG. JPEG encoding is not that heavy — expect a few FHD streams per core — but NDI® bandwidth adds up fast. A 1080p source is ~125 Mbps, so on gigabit ethernet you top out around 6-8 FHD streams. On Wi-Fi, expect one or two — but that's the "quick peek" sweet spot anyway.
 
 ## Requirements
 
