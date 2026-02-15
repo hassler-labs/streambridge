@@ -23,6 +23,18 @@ StreamBridge picks up NDI® sources on your network and streams them to any brow
 
 Each source you watch pulls a full NDI® stream to the server and re-encodes it as JPEG. JPEG encoding is not that heavy — expect a few FHD streams per core — but NDI® bandwidth adds up fast. A 1080p source is ~125 Mbps, so on gigabit ethernet you top out around 6-8 FHD streams. On Wi-Fi, expect one or two — but that's the "quick peek" sweet spot anyway.
 
+## Windows SmartScreen
+
+The release binary is not code-signed, so Windows SmartScreen will block it the first time you run it.
+
+To allow it:
+
+1. Right-click `streambridge.exe` → **Properties**
+2. At the bottom of the **General** tab, check **Unblock**
+3. Click **OK**
+
+Alternatively, when SmartScreen shows "Windows protected your PC", click **More info** → **Run anyway**.
+
 ## Requirements
 
 - [NDI® 6 Runtime](https://ndi.video/tools/) on the machine running StreamBridge
